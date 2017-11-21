@@ -67,7 +67,7 @@ resource "digitalocean_tag" "load_balancer" {
 
 # load_balancer Container Linux Config
 data "template_file" "load_balancer_config" {
-  template = "${var.nginx_conf}"
+  template = "${file("var.nginx_conf_path")}"
 
   vars = {
     k8s_api  = "${formatlist("server %s:%s;\n", digitalocean_droplet.workers.*.ipv4_address), var.api_port}"
