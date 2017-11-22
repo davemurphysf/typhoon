@@ -34,7 +34,7 @@ resource "digitalocean_droplet" "load_balancers" {
   ssh_keys  = "${var.ssh_fingerprints}"
 
   tags = [
-    "${digitalocean_tag.load_balancer.id}",
+    "${digitalocean_tag.load_balancer.id}"
   ]
 
   connection {
