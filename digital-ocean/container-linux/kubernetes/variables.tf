@@ -76,3 +76,35 @@ EOD
   type    = "string"
   default = "10.3.0.0/16"
 }
+
+variable "nginx_conf_path" {
+  type = "string"
+  default = "nginx.conf"
+}
+
+variable "api_port" {
+  type = "string"
+  default = "7000"
+}
+
+variable "auth_port" {
+  type = "string"
+  default = "6000"
+}
+
+variable "core_port" {
+  type = "string"
+  default = "5000"
+}
+
+variable "load_balancer_image" {
+  type = "string"
+}
+
+variable "load_balancer_count" {
+  type = "string"
+}
+
+variable "load_balancer_type" {
+  type = "string"
+}
