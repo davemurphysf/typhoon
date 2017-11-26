@@ -48,9 +48,11 @@ resource "digitalocean_droplet" "load_balancers" {
     inline = [
       "export PATH=$PATH:/usr/bin",
       "curl -L http://nginx.org/keys/nginx_signing.key | sudo apt-key add -",
-      "sudo add-apt-repository \"deb http://nginx.org/packages/mainline/ubuntu/\" $(lsb_release -s -c) main",
-      "sudo apt-get update",
-      "sudo apt-get -y install nginx"
+      "echo \"deb http://nginx.org/packages/mainline/ubuntu/ xenial nginx\" | sudo tee /etc/apt/sources.list.d/nginx.list",
+      "echo \"deb-src http://nginx.org/packages/mainline/ubuntu/ xenial nginx\" | sudo tee -a /etc/apt/sources.list.d/nginx.list",
+      "sudo apt-get update && sudo apt-get upgrade -y",
+      "sudo apt-get -y install nginx",
+      "sudo rm -rf /etc/nginx/sites-enabled"
     ]
   }
 
