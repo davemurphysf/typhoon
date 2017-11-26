@@ -33,3 +33,11 @@ output "load_balancers_ipv6" {
 output "floating_ip" {
   value = "${digitalocean_floating_ip.load_balancers.ip_address}"
 }
+
+output "asset_dir" {
+  value = "${var.asset_dir}"
+}
+
+output "cluster_name" {
+  value = "${var.cluster_name}"
+}
