@@ -18,6 +18,10 @@ output "workers_ipv4" {
   value = ["${digitalocean_droplet.workers.*.ipv4_address}"]
 }
 
+output "workers_ipv4_private" {
+  value = ["${digitalocean_droplet.workers.*.ipv4_address_private}"]
+}
+
 output "workers_ipv6" {
   value = ["${digitalocean_droplet.workers.*.ipv6_address}"]
 }
