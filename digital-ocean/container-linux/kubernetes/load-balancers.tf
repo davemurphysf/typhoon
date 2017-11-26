@@ -59,6 +59,28 @@ resource "digitalocean_droplet" "load_balancers" {
     content     = "${data.template_file.load_balancer_config.rendered}"
     destination = "/etc/nginx/nginx.conf"
   }
+
+  provisioner "file" {
+    content = "${file("${var.client_cert_path}")}"
+    destination = "/etc/nginx/client-origin.pem"
+  }
+
+  provisioner "file" {
+    content = "${file("${var.origin_cert_path}")}"
+    destination = "/etc/nginx/origin.cert"
+  }
+
+  provisioner "file" {
+    content = "${file("${var.origin_key_path}")}"
+    destination = "/etc/nginx/origin.key"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "export PATH=$PATH:/usr/bin",
+      "systemctl start nginx.service"
+    ]
+  }
 }
 
 # Tag to label load_balancer
