@@ -75,7 +75,7 @@ resource "null_resource" "bootkube-start" {
     type    = "ssh"
     host    = "${digitalocean_droplet.controllers.0.ipv4_address}"
     user    = "core"
-    timeout = "15m"
+    timeout = "10m"
   }
 
   provisioner "file" {
