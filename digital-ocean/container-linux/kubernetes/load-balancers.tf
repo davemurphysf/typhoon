@@ -92,8 +92,6 @@ data "template_file" "load_balancer_config" {
   template = "${file("${var.nginx_conf_path}")}"
 
   vars {
-    k8s_api = "${formatlist("server %s:%s;\n", digitalocean_droplet.workers.*.ipv4_address, var.api_port)}"
-    k8s_auth = "${formatlist("server %s:%s;\n", digitalocean_droplet.workers.*.ipv4_address, var.auth_port)}"
-    k8s_core = "${formatlist("server %s:%s;\n", digitalocean_droplet.workers.*.ipv4_address, var.core_port)}"
+    k8s = "${join("\n", formatlist("server %s;", digitalocean_droplet.workers.*.ipv4_address_private))}"
   }
 }
