@@ -94,3 +94,42 @@ resource "digitalocean_firewall" "controller" {
     },
   ]
 }
+
+resource "digitalocean_firewall" "lb" {
+  name = "${var.cluster_name}-lb"
+
+  depends_on = ["digitalocean_droplet.load_balancers"]
+
+  tags = ["${var.cluster_name}-load_balancer"]
+
+  # allow ssh, http/https ingress, and peer-to-peer traffic
+  inbound_rule = [
+    {
+      protocol         = "tcp"
+      port_range       = "22"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol         = "tcp"
+      port_range       = "443"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    }
+  ]
+
+  outbound_rule = [
+    {
+      protocol              = "icmp"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol              = "udp"
+      port_range            = "all"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol              = "tcp"
+      port_range            = "all"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
+    },
+  ]
+}
