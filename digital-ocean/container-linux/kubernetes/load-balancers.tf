@@ -40,7 +40,6 @@ resource "digitalocean_droplet" "load_balancers" {
   connection {
       user = "root"
       type = "ssh"
-      private_key = "${file(var.pvt_key)}"
       timeout = "2m"
   }
 
