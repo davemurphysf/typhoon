@@ -108,3 +108,15 @@ variable "load_balancer_count" {
 variable "load_balancer_type" {
   type = "string"
 }
+
+variable "client_cert_path" {
+  type = "string"
+}
+
+variable "origin_cert_path" {
+  type = "string"
+}
+
+variable "origin_key_path" {
+  type = "string"
+}
