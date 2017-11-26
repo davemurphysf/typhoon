@@ -5,7 +5,7 @@ resource "digitalocean_record" "load_balancer" {
   # DNS zone where record should be created
   domain = "${var.dns_zone}"
 
-  name  = "${var.cluster_name}-load_balancer"
+  name  = "${var.cluster_name}-lb"
   type  = "A"
   ttl   = 300
   value = "${element(digitalocean_droplet.load_balancers.*.ipv4_address, count.index)}"
@@ -18,13 +18,13 @@ resource "digitalocean_floating_ip" "load_balancers" {
 
 # load_balancer droplet instances
 resource "digitalocean_droplet" "load_balancers" {
-  depends_on = ["digitalocean_droplet.workers", "digitalocean_droplet.controllers"]
+  depends_on = ["digitalocean_droplet.workers", "digitalocean_droplet.controllers", "null_resource.bootkube-start"]
   count = "${var.load_balancer_count}"
 
-  name   = "${var.cluster_name}-load_balancer-${count.index}"
+  name   = "${var.cluster_name}-lb-${count.index}"
   region = "${var.region}"
 
-  image = "${var.image}"
+  image = "${var.load_balancer_image}"
   size  = "${var.load_balancer_type}"
 
   # network
