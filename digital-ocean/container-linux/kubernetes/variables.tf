@@ -77,24 +77,11 @@ EOD
   default = "10.3.0.0/16"
 }
 
+# load-balancer
+
 variable "nginx_conf_path" {
   type = "string"
   default = "nginx.conf"
-}
-
-variable "api_port" {
-  type = "string"
-  default = "7000"
-}
-
-variable "auth_port" {
-  type = "string"
-  default = "6000"
-}
-
-variable "core_port" {
-  type = "string"
-  default = "5000"
 }
 
 variable "load_balancer_image" {
@@ -118,5 +105,31 @@ variable "origin_cert_path" {
 }
 
 variable "origin_key_path" {
+  type = "string"
+}
+
+# db
+
+variable "db_image" {
+  type = "string"
+}
+
+variable "db_type" {
+  type = "string"
+}
+
+variable "db_user" {
+  type = "string"
+}
+
+variable "db_password" {
+  type = "string"
+}
+
+variable "db_database_name" {
+  type = "string"
+}
+
+variable "db_postgres_conf_path" {
   type = "string"
 }
