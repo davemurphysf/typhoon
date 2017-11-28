@@ -78,7 +78,8 @@ resource "digitalocean_droplet" "load_balancers" {
   provisioner "remote-exec" {
     inline = [
       "export PATH=$PATH:/usr/bin",
-      "systemctl start nginx.service"
+      "systemctl start nginx.service",
+      "curl -sSL https://agent.digitalocean.com/install.sh | sh"
     ]
   }
 }

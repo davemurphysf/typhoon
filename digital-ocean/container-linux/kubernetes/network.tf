@@ -3,8 +3,6 @@ resource "digitalocean_firewall" "workers" {
 
   tags = ["${var.cluster_name}-worker"]
 
-  depends_on = ["digitalocean_droplet.workers"]
-
   inbound_rule = [
     {
       protocol         = "tcp"
@@ -19,12 +17,12 @@ resource "digitalocean_firewall" "workers" {
     {
       protocol    = "udp"
       port_range  = "all"
-      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}"]
+      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}", "${digitalocean_tag.db.name}"]
     },
     {
       protocol    = "tcp"
       port_range  = "all"
-      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}"]
+      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}", "${digitalocean_tag.db.name}"]
     },
   ]
 
@@ -51,8 +49,6 @@ resource "digitalocean_firewall" "controller" {
 
   tags = ["${var.cluster_name}-controller"]
 
-  depends_on = ["digitalocean_droplet.controllers"]
-
   inbound_rule = [
     {
       protocol         = "tcp"
@@ -67,13 +63,13 @@ resource "digitalocean_firewall" "controller" {
     {
       protocol    = "udp"
       port_range  = "all"
-      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}"]
+      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}", "${digitalocean_tag.db.name}"]
     },
     {
       protocol    = "tcp"
       port_range  = "all"
-      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}"]
-    },
+      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}", "${digitalocean_tag.db.name}"]
+    }
   ]
 
   # allow all outbound traffic
@@ -98,8 +94,6 @@ resource "digitalocean_firewall" "controller" {
 resource "digitalocean_firewall" "lb" {
   name = "${var.cluster_name}-lb"
 
-  depends_on = ["digitalocean_droplet.load_balancers"]
-
   tags = ["${var.cluster_name}-load_balancer"]
 
   # allow ssh, http/https ingress, and peer-to-peer traffic
@@ -113,6 +107,57 @@ resource "digitalocean_firewall" "lb" {
       protocol         = "tcp"
       port_range       = "443"
       source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol    = "udp"
+      port_range  = "all"
+      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}"]
+    },
+    {
+      protocol    = "tcp"
+      port_range  = "all"
+      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}"]
+    }
+  ]
+
+  outbound_rule = [
+    {
+      protocol              = "icmp"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol              = "udp"
+      port_range            = "all"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol              = "tcp"
+      port_range            = "all"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
+    },
+  ]
+}
+
+resource "digitalocean_firewall" "db" {
+  name = "${var.cluster_name}-db"
+
+  tags = ["${var.cluster_name}-db"]
+
+  inbound_rule = [
+    {
+      protocol         = "tcp"
+      port_range       = "22"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol    = "udp"
+      port_range  = "all"
+      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}"]
+    },
+    {
+      protocol    = "tcp"
+      port_range  = "all"
+      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}"]
     }
   ]
 
