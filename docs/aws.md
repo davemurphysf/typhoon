@@ -1,6 +1,6 @@
 # AWS
 
-In this tutorial, we'll create a Kubernetes v1.8.3 cluster on AWS.
+In this tutorial, we'll create a Kubernetes v1.8.5 cluster on AWS.
 
 We'll declare a Kubernetes cluster in Terraform using the Typhoon Terraform module. On apply, a VPC, gateway, subnets, auto-scaling groups of controllers and workers, network load balancers for controllers and workers, and security groups will be created.
 
@@ -10,11 +10,11 @@ Controllers and workers are provisioned to run a `kubelet`. A one-time [bootkube
 
 * AWS Account and IAM credentials
 * AWS Route53 DNS Zone (registered Domain Name or delegated subdomain)
-* Terraform v0.10.4+ and [terraform-provider-ct](https://github.com/coreos/terraform-provider-ct) installed locally
+* Terraform v0.10.x and [terraform-provider-ct](https://github.com/coreos/terraform-provider-ct) installed locally
 
 ## Terraform Setup
 
-Install [Terraform](https://www.terraform.io/downloads.html) v0.10.1 on your system.
+Install [Terraform](https://www.terraform.io/downloads.html) v0.10.x on your system.
 
 ```sh
 $ terraform version
@@ -103,7 +103,7 @@ ssh-add -L
 ```
 
 !!! warning
-    `terrafrom apply` will hang connecting to a controller if `ssh-agent` does not contain the SSH key.
+    `terraform apply` will hang connecting to a controller if `ssh-agent` does not contain the SSH key.
 
 ## Apply
 
@@ -119,7 +119,7 @@ Get or update Terraform modules.
 $ terraform get            # downloads missing modules
 $ terraform get --update   # updates all modules
 Get: git::https://github.com/poseidon/typhoon (update)
-Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.8.2 (update)
+Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.0 (update)
 ```
 
 Plan the resources to be created.
@@ -151,9 +151,9 @@ In 4-8 minutes, the Kubernetes cluster will be ready.
 $ KUBECONFIG=/home/user/.secrets/clusters/tempest/auth/kubeconfig
 $ kubectl get nodes
 NAME             STATUS    AGE       VERSION        
-ip-10-0-12-221   Ready     34m       v1.8.3
-ip-10-0-19-112   Ready     34m       v1.8.3
-ip-10-0-4-22     Ready     34m       v1.8.3
+ip-10-0-12-221   Ready     34m       v1.8.5
+ip-10-0-19-112   Ready     34m       v1.8.5
+ip-10-0-4-22     Ready     34m       v1.8.5
 ```
 
 List the pods.
@@ -201,7 +201,7 @@ Learn about [version pinning](concepts.md#versioning), maintenance, and [addons]
 
 Clusters create a DNS A record `${cluster_name}.${dns_zone}` to resolve a network load balancer backed by controller instances. This FQDN is used by workers and `kubectl` to access the apiserver. In this example, the cluster's apiserver would be accessible at `tempest.aws.example.com`.
 
-You'll need a registered domain name or subdomain registered in a AWS Route53 DNS zone. You can set this up once and create many clusters with unqiue names.
+You'll need a registered domain name or subdomain registered in a AWS Route53 DNS zone. You can set this up once and create many clusters with unique names.
 
 ```tf
 resource "aws_route53_zone" "zone-for-clusters" {
@@ -227,7 +227,7 @@ Reference the DNS zone id with `"${aws_route53_zone.zone-for-clusters.zone_id}"`
 | network_mtu | CNI interface MTU (calico only) | 1480 | 8981 |
 | host_cidr | CIDR range to assign to EC2 instances | "10.0.0.0/16" | "10.1.0.0/16" |
 | pod_cidr | CIDR range to assign to Kubernetes pods | "10.2.0.0/16" | "10.22.0.0/16" |
-| service_cidr | CIDR range to assgin to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
+| service_cidr | CIDR range to assign to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
 
 Check the list of valid [instance types](https://aws.amazon.com/ec2/instance-types/).
 

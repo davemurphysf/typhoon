@@ -4,6 +4,31 @@ Notable changes between versions.
 
 ## Latest
 
+* Kubernetes [v1.8.5](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.8.md#v185)
+* Recommend Container Linux [images](https://coreos.com/releases/) with Docker 17.09
+  * Container Linux stable, beta, and alpha now provide Docker 17.09 (instead
+  of 1.12). Recommend images which provide 17.09.
+  * Older clusters (with CLUO addon) auto-update node's Container Linux version
+  and will begin using Docker 17.09.
+* Fix race where `etcd-member.service` could fail to resolve peers ([#69](https://github.com/poseidon/typhoon/pull/69)) 
+
+#### Bare-Metal
+
+* Add kubelet `--volume-plugin-dir` flag to allow flexvolume providers ([#61](https://github.com/poseidon/typhoon/pull/61))
+
+#### Addons
+
+* Deploying the Kubernetes Dashboard is discouraged
+
+## v1.8.4
+
+* Kubernetes v1.8.4
+* Calico related bug fixes
+* Update Calico from v2.6.1 to v2.6.3
+* Update flannel from v0.9.0 to v0.9.1
+* Service accounts for kube-proxy and pod-checkpointer
+* Use kubernetes-incubator/bootkube v0.9.0
+
 ## v1.8.3
 
 * Kubernetes v1.8.3
@@ -86,7 +111,7 @@ Notable changes between versions.
 ## v1.7.3
 
 * Kubernetes v1.7.3
-* Use kubernete-incubator/bootkube v0.6.1
+* Use kubernetes-incubator/bootkube v0.6.1
 
 #### Digital Ocean
 
@@ -96,7 +121,7 @@ Notable changes between versions.
 ## v1.7.1
 
 * Kubernetes v1.7.1
-* Use kubernete-incubator/bootkube v0.6.0
+* Use kubernetes-incubator/bootkube v0.6.0
 * Add Bare-Metal Terraform module (stable)
 * Add Digital Ocean Terraform module (beta)
 
@@ -109,12 +134,12 @@ Notable changes between versions.
 ## v1.6.7
 
 * Kubernetes v1.6.7
-* Use kubernete-incubator/bootkube v0.5.1
+* Use kubernetes-incubator/bootkube v0.5.1
 
 ## v1.6.6
 
 * Kubernetes v1.6.6
-* Use kubernete-incubator/bootkube v0.4.5
+* Use kubernetes-incubator/bootkube v0.4.5
 * Disable locksmithd on hosts, in favor of [CLUO](https://github.com/coreos/container-linux-update-operator).
 
 ## v1.6.4

@@ -1,6 +1,6 @@
 # Digital Ocean
 
-In this tutorial, we'll create a Kubernetes v1.8.3 cluster on Digital Ocean.
+In this tutorial, we'll create a Kubernetes v1.8.5 cluster on Digital Ocean.
 
 We'll declare a Kubernetes cluster in Terraform using the Typhoon Terraform module. On apply, firewall rules, DNS records, tags, and droplets for Kubernetes controllers and workers will be created.
 
@@ -10,11 +10,11 @@ Controllers and workers are provisioned to run a `kubelet`. A one-time [bootkube
 
 * Digital Ocean Account and Token
 * Digital Ocean Domain (registered Domain Name or delegated subdomain)
-* Terraform v0.10.4+ and [terraform-provider-ct](https://github.com/coreos/terraform-provider-ct) installed locally
+* Terraform v0.10.x and [terraform-provider-ct](https://github.com/coreos/terraform-provider-ct) installed locally
 
 ## Terraform Setup
 
-Install [Terraform](https://www.terraform.io/downloads.html) v0.10.1+ on your system.
+Install [Terraform](https://www.terraform.io/downloads.html) v0.10.x on your system.
 
 ```sh
 $ terraform version
@@ -98,7 +98,7 @@ ssh-add -L
 ```
 
 !!! warning
-    `terrafrom apply` will hang connecting to a controller if `ssh-agent` does not contain the SSH key.
+    `terraform apply` will hang connecting to a controller if `ssh-agent` does not contain the SSH key.
 
 ## Apply
 
@@ -114,7 +114,7 @@ Get or update Terraform modules.
 $ terraform get            # downloads missing modules
 $ terraform get --update   # updates all modules
 Get: git::https://github.com/poseidon/typhoon (update)
-Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.8.2 (update)
+Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.0 (update)
 ```
 
 Plan the resources to be created.
@@ -147,9 +147,9 @@ In 3-6 minutes, the Kubernetes cluster will be ready.
 $ KUBECONFIG=/home/user/.secrets/clusters/nemo/auth/kubeconfig
 $ kubectl get nodes
 NAME             STATUS    AGE       VERSION
-10.132.110.130   Ready     10m       v1.8.3
-10.132.115.81    Ready     10m       v1.8.3
-10.132.124.107   Ready     10m       v1.8.3
+10.132.110.130   Ready     10m       v1.8.5
+10.132.115.81    Ready     10m       v1.8.5
+10.132.124.107   Ready     10m       v1.8.5
 ```
 
 List the pods.
@@ -195,7 +195,7 @@ Learn about [version pinning](concepts.md#versioning), maintenance, and [addons]
 
 Clusters create DNS A records `${cluster_name}.${dns_zone}` to resolve to controller droplets (round robin). This FQDN is used by workers and `kubectl` to access the apiserver. In this example, the cluster's apiserver would be accessible at `nemo.do.example.com`.
 
-You'll need a registered domain name or subdomain registered in Digital Ocean Domains (i.e. DNS zones). You can set this up once and create many clusters with unqiue names.
+You'll need a registered domain name or subdomain registered in Digital Ocean Domains (i.e. DNS zones). You can set this up once and create many clusters with unique names.
 
 ```tf
 resource "digitalocean_domain" "zone-for-clusters" {
@@ -237,7 +237,7 @@ If you uploaded an SSH key to DigitalOcean (not required), find the fingerprint 
 | worker_type | Digital Ocean droplet size | 512mb | 512mb, 1gb, 2gb, 4gb |
 | networking | Choice of networking provider | "flannel" | "flannel" |
 | pod_cidr | CIDR range to assign to Kubernetes pods | "10.2.0.0/16" | "10.22.0.0/16" |
-| service_cidr | CIDR range to assgin to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
+| service_cidr | CIDR range to assign to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
 
 !!! warning
     Do not choose a `controller_type` smaller than `2gb`. The `1gb` droplet is not sufficient for running a controller and bootstrapping will fail.

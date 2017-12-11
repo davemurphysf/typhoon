@@ -41,6 +41,7 @@ systemd:
         ExecStart=/bin/sh -c 'while ! /usr/bin/grep '^[^#[:space:]]' /etc/resolv.conf > /dev/null; do sleep 1; done'
         [Install]
         RequiredBy=kubelet.service
+        RequiredBy=etcd-member.service
     - name: kubelet.service
       enable: true
       contents: |
@@ -128,7 +129,7 @@ storage:
       contents:
         inline: |
           KUBELET_IMAGE_URL=docker://gcr.io/google_containers/hyperkube
-          KUBELET_IMAGE_TAG=v1.8.3
+          KUBELET_IMAGE_TAG=v1.8.5
     - path: /etc/sysctl.d/max-user-watches.conf
       filesystem: root
       contents:
@@ -151,7 +152,7 @@ storage:
           [ -d /opt/bootkube/assets/experimental/manifests ] && mv /opt/bootkube/assets/experimental/manifests/* /opt/bootkube/assets/manifests && rm -r /opt/bootkube/assets/experimental/manifests
           [ -d /opt/bootkube/assets/experimental/bootstrap-manifests ] && mv /opt/bootkube/assets/experimental/bootstrap-manifests/* /opt/bootkube/assets/bootstrap-manifests && rm -r /opt/bootkube/assets/experimental/bootstrap-manifests
           BOOTKUBE_ACI="$${BOOTKUBE_ACI:-quay.io/coreos/bootkube}"
-          BOOTKUBE_VERSION="$${BOOTKUBE_VERSION:-v0.8.2}"
+          BOOTKUBE_VERSION="$${BOOTKUBE_VERSION:-v0.9.0}"
           BOOTKUBE_ASSETS="$${BOOTKUBE_ASSETS:-/opt/bootkube/assets}"
           exec /usr/bin/rkt run \
             --trust-keys-from-https \

@@ -1,6 +1,6 @@
 # Bare-Metal
 
-In this tutorial, we'll network boot and provison a Kubernetes v1.8.3 cluster on bare-metal.
+In this tutorial, we'll network boot and provision a Kubernetes v1.8.5 cluster on bare-metal.
 
 First, we'll deploy a [Matchbox](https://github.com/coreos/matchbox) service and setup a network boot environment. Then, we'll declare a Kubernetes cluster in Terraform using the Typhoon Terraform module and power on machines. On PXE boot, machines will install Container Linux to disk, reboot into the disk install, and provision themselves as Kubernetes controllers or workers.
 
@@ -12,7 +12,7 @@ Controllers are provisioned as etcd peers and run `etcd-member` (etcd3) and `kub
 * PXE-enabled [network boot](https://coreos.com/matchbox/docs/latest/network-setup.html) environment
 * Matchbox v0.6+ deployment with API enabled
 * Matchbox credentials `client.crt`, `client.key`, `ca.crt`
-* Terraform v0.10.4+ and [terraform-provider-matchbox](https://github.com/coreos/terraform-provider-matchbox) installed locally
+* Terraform v0.10.x and [terraform-provider-matchbox](https://github.com/coreos/terraform-provider-matchbox) installed locally
 
 ## Machines
 
@@ -31,7 +31,7 @@ Configure each machine to boot from the disk [^1] through IPMI or the BIOS menu.
 ipmitool -H node1 -U USER -P PASS chassis bootdev disk options=persistent
 ```
  
-During provisioning, you'll explicitly set the boot device to `pxe` for the next boot only. Machines will install (overwrite) the operting system to disk on PXE boot and reboot into the disk install.
+During provisioning, you'll explicitly set the boot device to `pxe` for the next boot only. Machines will install (overwrite) the operating system to disk on PXE boot and reboot into the disk install.
 
 !!! tip ""
     Ask your hardware vendor to provide MACs and preconfigure IPMI, if possible. With it, you can rack new servers, `terraform apply` with new info, and power on machines that network boot and provision into clusters.
@@ -105,11 +105,11 @@ Read about the [many ways](https://coreos.com/matchbox/docs/latest/network-setup
 * Place Matchbox behind a menu entry (timeout and default to Matchbox)
 
 !!! note ""
-    TFTP chainloding to modern boot firmware, like iPXE, avoids issues with old NICs and allows faster transfer protocols like HTTP to be used.
+    TFTP chainloading to modern boot firmware, like iPXE, avoids issues with old NICs and allows faster transfer protocols like HTTP to be used.
 
 ## Terraform Setup
 
-Install [Terraform](https://www.terraform.io/downloads.html) v0.9.2+ on your system.
+Install [Terraform](https://www.terraform.io/downloads.html) v0.10.x on your system.
 
 ```sh
 $ terraform version
@@ -162,7 +162,7 @@ module "bare-metal-mercury" {
   # install
   matchbox_http_endpoint  = "http://matchbox.example.com"
   container_linux_channel = "stable"
-  container_linux_version = "1520.6.0"
+  container_linux_version = "1576.4.0"
   ssh_authorized_key      = "ssh-rsa AAAAB3Nz..."
 
   # cluster
@@ -203,7 +203,7 @@ ssh-add -L
 ```
 
 !!! warning
-    `terrafrom apply` will hang connecting to a controller if `ssh-agent` does not contain the SSH key.
+    `terraform apply` will hang connecting to a controller if `ssh-agent` does not contain the SSH key.
 
 ## Apply
 
@@ -219,7 +219,7 @@ Get or update Terraform modules.
 $ terraform get            # downloads missing modules
 $ terraform get --update   # updates all modules
 Get: git::https://github.com/poseidon/typhoon (update)
-Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.8.2 (update)
+Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.0 (update)
 ```
 
 Plan the resources to be created.
@@ -290,9 +290,9 @@ bootkube[5]: Tearing down temporary bootstrap control plane...
 $ KUBECONFIG=/home/user/.secrets/clusters/mercury/auth/kubeconfig
 $ kubectl get nodes
 NAME                STATUS    AGE       VERSION
-node1.example.com   Ready     11m       v1.8.3
-node2.example.com   Ready     11m       v1.8.3
-node3.example.com   Ready     11m       v1.8.3
+node1.example.com   Ready     11m       v1.8.5
+node2.example.com   Ready     11m       v1.8.5
+node3.example.com   Ready     11m       v1.8.5
 ```
 
 List the pods.
@@ -332,7 +332,7 @@ Learn about [version pinning](concepts.md#versioning), maintenance, and [addons]
 |:-----|:------------|:--------|
 | matchbox_http_endpoint | Matchbox HTTP read-only endpoint | http://matchbox.example.com:8080 |
 | container_linux_channel | Container Linux channel | stable, beta, alpha |
-| container_linux_version | Container Linux version of the kernel/initrd to PXE and the image to install | 1465.6.0 |
+| container_linux_version | Container Linux version of the kernel/initrd to PXE and the image to install | 1576.4.0 |
 | cluster_name | Cluster name | mercury |
 | k8s_domain_name | FQDN resolving to the controller(s) nodes. Workers and kubectl will communicate with this endpoint | "myk8s.example.com" |
 | ssh_authorized_key | SSH public key for ~/.ssh/authorized_keys | "ssh-rsa AAAAB3Nz..." |
@@ -354,6 +354,6 @@ Learn about [version pinning](concepts.md#versioning), maintenance, and [addons]
 | networking | Choice of networking provider | "calico" | "calico" or "flannel" |
 | network_mtu | CNI interface MTU (calico-only) | 1480 | - | 
 | pod_cidr | CIDR range to assign to Kubernetes pods | "10.2.0.0/16" | "10.22.0.0/16" |
-| service_cidr | CIDR range to assgin to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
+| service_cidr | CIDR range to assign to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
 | kernel_args | Additional kernel args to provide at PXE boot | [] | "kvm-intel.nested=1" |
 

@@ -1,6 +1,6 @@
 # Google Cloud
 
-In this tutorial, we'll create a Kubernetes v1.8.3 cluster on Google Compute Engine (not GKE).
+In this tutorial, we'll create a Kubernetes v1.8.5 cluster on Google Compute Engine (not GKE).
 
 We'll declare a Kubernetes cluster in Terraform using the Typhoon Terraform module. On apply, a network, firewall rules, managed instance groups of Kubernetes controllers and workers, network load balancers for controllers and workers, and health checks will be created.
 
@@ -10,11 +10,11 @@ Controllers and workers are provisioned to run a `kubelet`. A one-time [bootkube
 
 * Google Cloud Account and Service Account
 * Google Cloud DNS Zone (registered Domain Name or delegated subdomain)
-* Terraform v0.10.4+ and [terraform-provider-ct](https://github.com/coreos/terraform-provider-ct) installed locally
+* Terraform v0.10.x and [terraform-provider-ct](https://github.com/coreos/terraform-provider-ct) installed locally
 
 ## Terraform Setup
 
-Install [Terraform](https://www.terraform.io/downloads.html) v0.9.2+ on your system.
+Install [Terraform](https://www.terraform.io/downloads.html) v0.10.x on your system.
 
 ```sh
 $ terraform version
@@ -80,7 +80,7 @@ module "google-cloud-yavin" {
   region        = "us-central1"
   dns_zone      = "example.com"
   dns_zone_name = "example-zone"
-  os_image      = "coreos-stable-1520-6-0-v20171012"
+  os_image      = "coreos-stable-1576-4-0-v20171206"
 
   cluster_name       = "yavin"
   controller_count   = 1
@@ -104,7 +104,7 @@ ssh-add -L
 ```
 
 !!! warning
-    `terrafrom apply` will hang connecting to a controller if `ssh-agent` does not contain the SSH key.
+    `terraform apply` will hang connecting to a controller if `ssh-agent` does not contain the SSH key.
 
 ## Apply
 
@@ -120,7 +120,7 @@ Get or update Terraform modules.
 $ terraform get            # downloads missing modules
 $ terraform get --update   # updates all modules
 Get: git::https://github.com/poseidon/typhoon (update)
-Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.8.2 (update)
+Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.0 (update)
 ```
 
 Plan the resources to be created.
@@ -154,9 +154,9 @@ In 4-8 minutes, the Kubernetes cluster will be ready.
 $ KUBECONFIG=/home/user/.secrets/clusters/yavin/auth/kubeconfig
 $ kubectl get nodes
 NAME                                          STATUS   AGE    VERSION
-yavin-controller-0.c.example-com.internal     Ready    6m     v1.8.3
-yavin-worker-jrbf.c.example-com.internal      Ready    5m     v1.8.3
-yavin-worker-mzdm.c.example-com.internal      Ready    5m     v1.8.3
+yavin-controller-0.c.example-com.internal     Ready    6m     v1.8.5
+yavin-worker-jrbf.c.example-com.internal      Ready    5m     v1.8.5
+yavin-worker-mzdm.c.example-com.internal      Ready    5m     v1.8.5
 ```
 
 List the pods.
@@ -197,7 +197,7 @@ Learn about [version pinning](concepts.md#versioning), maintenance, and [addons]
 | dns_zone | Google Cloud DNS zone | "google-cloud.example.com" |
 | dns_zone_name | Google Cloud DNS zone name | "example-zone" |
 | ssh_authorized_key | SSH public key for ~/.ssh_authorized_keys | "ssh-rsa AAAAB3NZ..." |
-| os_image | OS image for compute instances | "coreos-stable-1465-6-0-v20170817" |
+| os_image | OS image for compute instances | "coreos-stable-1576-4-0-v20171206" |
 | asset_dir | Path to a directory where generated assets should be placed (contains secrets) | "/home/user/.secrets/clusters/yavin" |
 
 Check the list of valid [regions](https://cloud.google.com/compute/docs/regions-zones/regions-zones) and list Container Linux [images](https://cloud.google.com/compute/docs/images) with `gcloud compute images list | grep coreos`.
@@ -206,7 +206,7 @@ Check the list of valid [regions](https://cloud.google.com/compute/docs/regions-
 
 Clusters create a DNS A record `${cluster_name}.${dns_zone}` to resolve a network load balancer backed by controller instances. This FQDN is used by workers and `kubectl` to access the apiserver. In this example, the cluster's apiserver would be accessible at `yavin.google-cloud.example.com`.
 
-You'll need a registered domain name or subdomain registered in a Google Cloud DNS zone. You can set this up once and create many clusters with unqiue names.
+You'll need a registered domain name or subdomain registered in a Google Cloud DNS zone. You can set this up once and create many clusters with unique names.
 
 ```tf
 resource "google_dns_managed_zone" "zone-for-clusters" {
@@ -229,7 +229,7 @@ resource "google_dns_managed_zone" "zone-for-clusters" {
 | worker_preemptible | If enabled, Compute Engine will terminate controllers randomly within 24 hours | false | true |
 | networking | Choice of networking provider | "calico" | "calico" or "flannel" |
 | pod_cidr | CIDR range to assign to Kubernetes pods | "10.2.0.0/16" | "10.22.0.0/16" |
-| service_cidr | CIDR range to assgin to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
+| service_cidr | CIDR range to assign to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
 
 Check the list of valid [machine types](https://cloud.google.com/compute/docs/machine-types).
 
