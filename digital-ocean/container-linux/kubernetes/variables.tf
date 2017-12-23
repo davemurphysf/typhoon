@@ -97,12 +97,8 @@ EOD
   default = "10.3.0.0/16"
 }
 
-<<<<<<< HEAD
-=======
 variable "cluster_domain_suffix" {
   description = "Queries for domains with the suffix will be answered by kube-dns. Default is cluster.local (e.g. foo.default.svc.cluster.local) "
   type        = "string"
   default     = "cluster.local"
 }
-
->>>>>>> 201a38bd900f629b5f8f9b1b1e0e986bbb9428ae
