@@ -1,6 +1,6 @@
 # Google Cloud
 
-In this tutorial, we'll create a Kubernetes v1.8.5 cluster on Google Compute Engine (not GKE).
+In this tutorial, we'll create a Kubernetes v1.8.6 cluster on Google Compute Engine (not GKE).
 
 We'll declare a Kubernetes cluster in Terraform using the Typhoon Terraform module. On apply, a network, firewall rules, managed instance groups of Kubernetes controllers and workers, network load balancers for controllers and workers, and health checks will be created.
 
@@ -120,7 +120,7 @@ Get or update Terraform modules.
 $ terraform get            # downloads missing modules
 $ terraform get --update   # updates all modules
 Get: git::https://github.com/poseidon/typhoon (update)
-Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.0 (update)
+Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.1 (update)
 ```
 
 Plan the resources to be created.
@@ -154,9 +154,9 @@ In 4-8 minutes, the Kubernetes cluster will be ready.
 $ KUBECONFIG=/home/user/.secrets/clusters/yavin/auth/kubeconfig
 $ kubectl get nodes
 NAME                                          STATUS   AGE    VERSION
-yavin-controller-0.c.example-com.internal     Ready    6m     v1.8.5
-yavin-worker-jrbf.c.example-com.internal      Ready    5m     v1.8.5
-yavin-worker-mzdm.c.example-com.internal      Ready    5m     v1.8.5
+yavin-controller-0.c.example-com.internal     Ready    6m     v1.8.6
+yavin-worker-jrbf.c.example-com.internal      Ready    5m     v1.8.6
+yavin-worker-mzdm.c.example-com.internal      Ready    5m     v1.8.6
 ```
 
 List the pods.
@@ -230,6 +230,7 @@ resource "google_dns_managed_zone" "zone-for-clusters" {
 | networking | Choice of networking provider | "calico" | "calico" or "flannel" |
 | pod_cidr | CIDR range to assign to Kubernetes pods | "10.2.0.0/16" | "10.22.0.0/16" |
 | service_cidr | CIDR range to assign to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
+| cluster_domain_suffix | FQDN suffix for Kubernetes services answered by kube-dns. | "cluster.local" | "k8s.example.com" |
 
 Check the list of valid [machine types](https://cloud.google.com/compute/docs/machine-types).
 

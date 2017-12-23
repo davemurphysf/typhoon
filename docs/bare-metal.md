@@ -1,6 +1,6 @@
 # Bare-Metal
 
-In this tutorial, we'll network boot and provision a Kubernetes v1.8.5 cluster on bare-metal.
+In this tutorial, we'll network boot and provision a Kubernetes v1.8.6 cluster on bare-metal.
 
 First, we'll deploy a [Matchbox](https://github.com/coreos/matchbox) service and setup a network boot environment. Then, we'll declare a Kubernetes cluster in Terraform using the Typhoon Terraform module and power on machines. On PXE boot, machines will install Container Linux to disk, reboot into the disk install, and provision themselves as Kubernetes controllers or workers.
 
@@ -219,7 +219,7 @@ Get or update Terraform modules.
 $ terraform get            # downloads missing modules
 $ terraform get --update   # updates all modules
 Get: git::https://github.com/poseidon/typhoon (update)
-Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.0 (update)
+Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.1 (update)
 ```
 
 Plan the resources to be created.
@@ -290,9 +290,9 @@ bootkube[5]: Tearing down temporary bootstrap control plane...
 $ KUBECONFIG=/home/user/.secrets/clusters/mercury/auth/kubeconfig
 $ kubectl get nodes
 NAME                STATUS    AGE       VERSION
-node1.example.com   Ready     11m       v1.8.5
-node2.example.com   Ready     11m       v1.8.5
-node3.example.com   Ready     11m       v1.8.5
+node1.example.com   Ready     11m       v1.8.6
+node2.example.com   Ready     11m       v1.8.6
+node3.example.com   Ready     11m       v1.8.6
 ```
 
 List the pods.
@@ -355,5 +355,6 @@ Learn about [version pinning](concepts.md#versioning), maintenance, and [addons]
 | network_mtu | CNI interface MTU (calico-only) | 1480 | - | 
 | pod_cidr | CIDR range to assign to Kubernetes pods | "10.2.0.0/16" | "10.22.0.0/16" |
 | service_cidr | CIDR range to assign to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
+| cluster_domain_suffix | FQDN suffix for Kubernetes services answered by kube-dns. | "cluster.local" | "k8s.example.com" |
 | kernel_args | Additional kernel args to provide at PXE boot | [] | "kvm-intel.nested=1" |
 

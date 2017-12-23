@@ -1,6 +1,6 @@
 # Digital Ocean
 
-In this tutorial, we'll create a Kubernetes v1.8.5 cluster on Digital Ocean.
+In this tutorial, we'll create a Kubernetes v1.8.6 cluster on Digital Ocean.
 
 We'll declare a Kubernetes cluster in Terraform using the Typhoon Terraform module. On apply, firewall rules, DNS records, tags, and droplets for Kubernetes controllers and workers will be created.
 
@@ -114,7 +114,7 @@ Get or update Terraform modules.
 $ terraform get            # downloads missing modules
 $ terraform get --update   # updates all modules
 Get: git::https://github.com/poseidon/typhoon (update)
-Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.0 (update)
+Get: git::https://github.com/poseidon/bootkube-terraform.git?ref=v0.9.1 (update)
 ```
 
 Plan the resources to be created.
@@ -147,9 +147,9 @@ In 3-6 minutes, the Kubernetes cluster will be ready.
 $ KUBECONFIG=/home/user/.secrets/clusters/nemo/auth/kubeconfig
 $ kubectl get nodes
 NAME             STATUS    AGE       VERSION
-10.132.110.130   Ready     10m       v1.8.5
-10.132.115.81    Ready     10m       v1.8.5
-10.132.124.107   Ready     10m       v1.8.5
+10.132.110.130   Ready     10m       v1.8.6
+10.132.115.81    Ready     10m       v1.8.6
+10.132.124.107   Ready     10m       v1.8.6
 ```
 
 List the pods.
@@ -238,6 +238,7 @@ If you uploaded an SSH key to DigitalOcean (not required), find the fingerprint 
 | networking | Choice of networking provider | "flannel" | "flannel" |
 | pod_cidr | CIDR range to assign to Kubernetes pods | "10.2.0.0/16" | "10.22.0.0/16" |
 | service_cidr | CIDR range to assign to Kubernetes services | "10.3.0.0/16" | "10.3.0.0/24" |
+| cluster_domain_suffix | FQDN suffix for Kubernetes services answered by kube-dns. | "cluster.local" | "k8s.example.com" |
 
 !!! warning
     Do not choose a `controller_type` smaller than `2gb`. The `1gb` droplet is not sufficient for running a controller and bootstrapping will fail.
