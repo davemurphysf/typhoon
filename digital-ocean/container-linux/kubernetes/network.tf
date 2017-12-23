@@ -17,12 +17,12 @@ resource "digitalocean_firewall" "workers" {
     {
       protocol    = "udp"
       port_range  = "all"
-      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}", "${digitalocean_tag.db.name}"]
+      source_tags = ["${var.worker_firewall_tag_names}"]
     },
     {
       protocol    = "tcp"
       port_range  = "all"
-      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}", "${digitalocean_tag.db.name}"]
+      source_tags = ["${var.worker_firewall_tag_names}"]
     },
   ]
 
@@ -63,12 +63,12 @@ resource "digitalocean_firewall" "controller" {
     {
       protocol    = "udp"
       port_range  = "all"
-      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}", "${digitalocean_tag.db.name}"]
+      source_tags = ["${var.controller_firewall_tag_names}"]
     },
     {
       protocol    = "tcp"
       port_range  = "all"
-      source_tags = ["${digitalocean_tag.controllers.name}", "${digitalocean_tag.workers.name}", "${digitalocean_tag.load_balancer.name}", "${digitalocean_tag.db.name}"]
+      source_tags = ["${var.controller_firewall_tag_names}"]
     }
   ]
 

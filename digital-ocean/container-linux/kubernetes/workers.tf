@@ -28,14 +28,7 @@ resource "digitalocean_droplet" "workers" {
   user_data = "${data.ct_config.worker_ign.rendered}"
   ssh_keys  = "${var.ssh_fingerprints}"
 
-  tags = [
-    "${digitalocean_tag.workers.id}",
-  ]
-}
-
-# Tag to label workers
-resource "digitalocean_tag" "workers" {
-  name = "${var.cluster_name}-worker"
+  tags = ["${var.worker_tag_ids}"]
 }
 
 # Worker Container Linux Config

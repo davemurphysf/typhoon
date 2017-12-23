@@ -25,7 +25,3 @@ output "workers_ipv4_private" {
 output "workers_ipv6" {
   value = ["${digitalocean_droplet.workers.*.ipv6_address}"]
 }
-
-output "workers_tag" {
-  value = ${digitalocean_tag.workers.name}
-}

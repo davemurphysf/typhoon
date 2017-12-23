@@ -48,6 +48,26 @@ variable "ssh_fingerprints" {
   description = "SSH public key fingerprints. (e.g. see `ssh-add -l -E md5`)"
 }
 
+variable "controller_tag_ids" {
+  type        = "list"
+  description = "Droplet tag IDs to add to controller droplets"
+}
+
+variable "worker_tag_ids" {
+  type        = "list"
+  description = "Droplet tag IDs to add to worker droplets"
+}
+
+variable "controller_firewall_tag_names" {
+  type        = "list"
+  description = "Droplet tag NAMES to add to controller firewall"
+}
+
+variable "worker_firewall_tag_names" {
+  type        = "list"
+  description = "Droplet tag NAMES to add to worker firewall"
+}
+
 # bootkube assets
 
 variable "asset_dir" {

@@ -47,14 +47,7 @@ resource "digitalocean_droplet" "controllers" {
   user_data = "${element(data.ct_config.controller_ign.*.rendered, count.index)}"
   ssh_keys  = "${var.ssh_fingerprints}"
 
-  tags = [
-    "${digitalocean_tag.controllers.id}",
-  ]
-}
-
-# Tag to label controllers
-resource "digitalocean_tag" "controllers" {
-  name = "${var.cluster_name}-controller"
+  tags = ["${var.controller_tag_ids}"]
 }
 
 # Controller Container Linux Config
